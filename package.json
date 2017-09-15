@@ -1,28 +1,31 @@
 {
-  "//1": "describes your app and its dependencies",
-  "//2": "https://docs.npmjs.com/files/package.json",
-  "//3": "updating this file will download and update your packages",
-
-  "name": "my-glitch-app",
+  "name": "LittleUrl",
   "version": "0.0.1",
-  "description": "What am I about?",
+  "author": "Brian Lusina",
+  "description": "A simple Url shortener service, enter a url, receive a shortened output in JSON format",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "mongodb": "^2.2.31",
+    "pug": "^0.1.0"
   },
   "engines": {
     "node": "8.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/welcome-project"
+    "url": "https://github.com/Wyvarn/littleurl"
   },
+  "bugs": {
+    "url": "https://github.com/Wyvarn/littleurl/issues"
+  },
+  "homepage": "https://github.com/Wyvarn/littleurl#README",
   "license": "MIT",
   "keywords": [
     "node",
-    "glitch",
-    "express"
+    "express",
+    "url-shortener"
   ]
 }

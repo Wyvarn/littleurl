@@ -16,7 +16,15 @@ $ npm install
 # or if you are a fan of yarn like I am
 $ yarn install
 ```
-> This will get you started
+> This will get you started with the dependencies
+
+You will need to setup MongoDB on [mlab](https://mlab.com) in order to get a mongo db uri for storing the shortened urls.
+
+Once you have Your mongo DB setup, create a .env file at the root of your project and include this in it:
+
+```plain
+MONGODB_URI=mongodb://<USERNAME>:<PASSWORD>@ds135574.mlab.com:<PORT>/<DB_NAME>
+```
 
 Now you can run the app
 
