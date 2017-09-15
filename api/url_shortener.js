@@ -27,7 +27,7 @@ module.exports = (app, db)=>{
   **/
   function handlePost(request, response){
     // create a short url and store the display information
-    let url = request.url.slice(11);
+    let url = request.url.slice(8);
     
     // we check if the url is valid and generate a shortened url
     if(validateUrl(url)){
