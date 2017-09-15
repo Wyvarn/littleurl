@@ -16,9 +16,6 @@ mongo.MongoClient.connect(mongodbUri, (err, db) => {
   }else{
     console.log("Successully connected to MongoDB");
   }
-  
-  app.set("view", path.join(__dirname, "views"));
-  app.set("view engine", "pug");
 
   db.createCollection("sites", {
     capped: true,
@@ -26,18 +23,13 @@ mongo.MongoClient.connect(mongodbUri, (err, db) => {
     max: 5000
   });
   
+  app.use(express.static('public'));
+
   // configure routes
   routes(app, db);
   
   // where the magic happens
   api(app, db);
-  
-  // app.use(express.static('public'));
-
-  // simplly serve the index.html file
-  // app.get("/", function (request, response) {
-  //    response.sendFile(__dirname + '/views/index.html');
-  //});
 
   // listen for requests :)
   let port = process.env.PORT || 8000;

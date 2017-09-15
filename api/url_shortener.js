@@ -4,6 +4,9 @@ module.exports = (app, db)=>{
   // database
   app.route("/:url").get(handleGet);
   
+  // handle post requests to enable url shortenning
+  app.get("/little/:url*", handlePost);
+  
   /**
   * Handles get requests on the given url, Will check which type of url we are handling before trying tofind it in the database
   * In this case, gets the url for the given link and passes it to find the url in the db
@@ -24,7 +27,7 @@ module.exports = (app, db)=>{
   **/
   function handlePost(request, response){
     // create a short url and store the display information
-    let url = request.url.slice(5);
+    let url = request.url.slice(11);
     
     // we check if the url is valid and generate a shortened url
     if(validateUrl(url)){
@@ -87,12 +90,16 @@ module.exports = (app, db)=>{
         return obj.short_url;
       });
       
+      // an array of alphabets used in the construction of the shortener
+      let alphabets = 'abcdefghijklmnopqrstuvwxyz'.split('')
       let newLink;
-      
       do{
         // Generates random four digit number for link
-        var num = Math.floor(100000 + Math.random() * 900000);
-        newLink = process.env.APP_URL + num.toString().substring(0, 4);
+        let num = Math.floor(100000 + Math.random() * 900000);
+        let alpha = alphabets.slice(Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)).join("");
+        let chars = num.toString() + alpha;
+        
+        newLink = process.env.APP_URL + chars.substring(0, 5);
       }while(urlList.indexOf(newLink) != -1);
       
       // call callback to perform database transaction
