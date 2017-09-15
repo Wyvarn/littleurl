@@ -23,7 +23,18 @@ module.exports = (app, db)=>{
   * @param response The response to send back to the client, this will be a JSON
   **/
   function handlePost(request, response){
+    // create a short url and store the display information
+    let url = request.url.slice(5);
     
+    // we check if the url is valid and generate a shortened url
+    if(validateUrl(url)){
+      // generate the given url
+      
+      // Generate link, save in db and send response
+      linkGenerator(url, response, db, saveToDb);
+    }else{
+      response.send({error :"Wrong URL format, please make sure you have a correct and valid url to use."});
+    }
   }
   
   /**
@@ -33,7 +44,7 @@ module.exports = (app, db)=>{
   * @param{Object} response 
   */
   function findUrl(link, db, response){
-    let sites = db.Collection("sites");
+    let sites = db.collection("sites");
     
     sites.findOne({
       "short_url" : link
@@ -55,6 +66,75 @@ module.exports = (app, db)=>{
           error : "This url is not in the database :(. Are you sure you shortened it?"
         });
       }
+    });
+  }
+  
+  /**
+  * Link generator, where the magic actually happens, 
+  * @param url the url to generate a short url for
+  * @param res the response to us
+  * @param db the database to use for the storage of the generated url
+  * @param callback the callback function to use to store the url and its shortened version to the database and send back a response
+  **/
+  function linkGenerator(url, res, db, callback){
+    db.collection("sites").find().toArray((err, data) => {
+      if(err){
+        return callback(err);
+      }
+      
+      // get all short links and put them in an array
+      let urlList = data.map((obj)=> {
+        return obj.short_url;
+      });
+      
+      let newLink;
+      
+      do{
+        // Generates random four digit number for link
+        var num = Math.floor(100000 + Math.random() * 900000);
+        newLink = process.env.APP_URL + num.toString().substring(0, 4);
+      }while(urlList.indexOf(newLink) != -1);
+      
+      // call callback to perform database transaction
+      return callback(null, url, newLink, res, db);
+    })
+  }
+  
+  
+  /**Callback to save the url to the database alongside the original url
+  * @param {String} err the error to handle, if any
+  * @param {String} url the url to shorten and save to db for reference
+  * @param {String} newLink, the shortened Url link to send as response and save to db
+  * @param {object} db, the database to use as storage
+  **/
+  function saveToDb(err, url, newLink, res, db){
+    if(err){
+      console.log(`Failed to save to databser with error ${err}`);
+      throw err;
+    }  
+  
+    // Create new object
+    let urlObj = {
+      "original_url": url,
+      "short_url": newLink
+    };
+    
+    let sites = db.collection("sites");
+    
+    sites.save(urlObj, (err, result) =>{
+      if(err){
+        console.log(`Error encountered while saving to db ${err}`);
+        throw err;
+      }
+      
+      // Send response object
+      // We need to create the object again because
+      // urlObj now contains database id
+      res.send({
+        "original_url": url,
+        "short_url": newLink
+      });
+      console.log('Saved ' + result);
     });
   }
   
