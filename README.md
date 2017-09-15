@@ -10,8 +10,8 @@ If you pass an invalid URL that doesn't follow the valid http(s)://www.example.c
 When you visit that shortened URL, it will redirect to the original link.
 
 ```bash
-$ git clone
-$ cd 
+$ git clone https://github.com/Wyvarn/littleurl.git
+$ cd littleurl
 $ npm install
 # or if you are a fan of yarn like I am
 $ yarn install
