@@ -5,12 +5,13 @@ let mongo = require("mongodb");
 let path = require("path");
 let api = require("./api/url_shortener.js");
 
-var app = express();
+let app = express();
 
-mongo.MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/url-shortener", (err, db) => {
-  
+let mongodbUri = process.env.MONGODB_URI
+
+mongo.MongoClient.connect(mongodbUri, (err, db) => {  
   if(err){
-    console.error(`Database failed connection with err ${err}`)
+    console.log(`Database failed connection with err ${err}`)
     throw new Error("Database failed to connect");
   }else{
     console.log("Successully connected to MongoDB");
@@ -39,7 +40,7 @@ mongo.MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/
   //});
 
   // listen for requests :)
-  let port = process.eng.PORT || 8000;
+  let port = process.env.PORT || 8000;
   app.listen(port, function () {
     console.log(`LittleUrl is listening on port ${port}`);
   });  
